@@ -23,4 +23,3 @@ To install and run ScrabbleGame, ensure you have Python installed on your system
 6. Run the game by executing:
    ```sh
    python scrabble_game.py
-
