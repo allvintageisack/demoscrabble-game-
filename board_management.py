@@ -2,6 +2,7 @@ class Board:
     def __init__(self):
         self.board = [["   " for _ in range(15)] for _ in range(15)] 
         self.add_board()
+        self.board[7][7]=" * "
         
         #Added Board class with constructor to initialize the game board
         
@@ -25,3 +26,20 @@ class Board:
         # Triple Word Score (TWS), 
         # Double Word Score (DWS), 
         # Triple Letter Score (TLS), and Double Letter Score (DLS).
+    
+    def get_board(self):
+        board_str= " | " + " | ".join(str(i) for i in range(10)) + " | " + " | ".join(str(i) for i in range(10, 15)) + " | "
+        board_str += "\n   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n" #This line creates a visual separation between the header and the board content.
+        for i, row in enumerate(self.board):
+            row_str = " | ".join(item for item in row)    
+            if i < 10:
+             board_str += f"{i} | {row_str} | \n"
+            else:
+                board_str += f"{i} | {row_str} | \n"
+        
+        board_str += "\n   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n"
+        return board_str 
+    
+        #The get_board method generates a string representation of the board 
+        # that includes row and column indices, as well as the content of each cell. 
+    
