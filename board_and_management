@@ -40,5 +40,35 @@ class Board:
         board_str += "\n   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _"
         return board_str
         
-        #This method is useful for displaying the board in a readable format.
+        
 
+    def update_board(self, word, orientation, x, y):
+        if orientation == "horizontal":
+            for i, char in enumerate(word):
+                self.board[y][x + i] = f" {char} "
+        elif orientation == "vertical":
+            for i, char in enumerate(word):
+                self.board[y + i][x] = f" {char} "
+        #Orientation check Changed  "horizontal" and "vertical" to correctly differentiate between the two orientations.
+
+        #Indexing Correction: Adjusted the indexing in both (horizontal and vertical) to correctly place each character of the word on the board.
+
+                
+                
+# def main():
+#     board = Board()
+#     print("Initial Board:")
+#     print(board.get_board())
+
+
+#     word = "HELLO"
+#     orientation = "Horizontal"
+#     x = 3
+#     y = 7
+#     board.update_board(word, orientation, x, y)
+
+#     print("\nUpdated Board:")
+#     print(board.get_board())
+
+# if __name__ == "__main__":
+#     main()
