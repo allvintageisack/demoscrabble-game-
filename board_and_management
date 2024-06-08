@@ -52,23 +52,13 @@ class Board:
         #Orientation check Changed  "horizontal" and "vertical" to correctly differentiate between the two orientations.
 
         #Indexing Correction: Adjusted the indexing in both (horizontal and vertical) to correctly place each character of the word on the board.
-
+    
+    
+    
+    def place_holder(self, word, location, direction, player):
+        special_cells = []
+        direction = direction.lower()
+        word = word.upper()
+        
                 
-                
-# def main():
-#     board = Board()
-#     print("Initial Board:")
-#     print(board.get_board())
 
-
-#     word = "HELLO"
-#     orientation = "Horizontal"
-#     x = 3
-#     y = 7
-#     board.update_board(word, orientation, x, y)
-
-#     print("\nUpdated Board:")
-#     print(board.get_board())
-
-# if __name__ == "__main__":
-#     main()
