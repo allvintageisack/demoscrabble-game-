@@ -73,4 +73,12 @@ class Board:
                 self.board[location[0] + i][location[1]] = " " + word[i] + " "
                 
         #checks if the current cell is not if yes it stores the character to the special cell
-
+            for letter in word:
+                for tile in player.get_rack_arr():
+                    if tile.get_letter() == letter:
+                        player.rack.remove_fromrack(tile)
+            player.rack.refill_rack()
+        
+        
+        #Removes the matching tile from the player's rack.
+        #Calls refill_rack method to refill the player's rack with new tiles from the bag.
