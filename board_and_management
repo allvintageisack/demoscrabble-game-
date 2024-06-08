@@ -65,6 +65,12 @@ class Board:
                     special_cells.append((word[i], self.board[location[1] + i]))
                 self.board[location[0]][location[1] + 1] = "" + word[i] + ""
                 
-        #checks if the current cell is not if yes it stores the character to the special cell
+        
+        elif direction == "down":
+            for i in range(len(word)):
+                if self.board[location[0] + i][location[1]] != "   ":
+                        special_cells.append((word[i], self.board[location[0] + i][location[1]]))
+                self.board[location[0] + i][location[1]] = " " + word[i] + " "
                 
+        #checks if the current cell is not if yes it stores the character to the special cell
 
