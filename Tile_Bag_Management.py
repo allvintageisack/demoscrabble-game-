@@ -33,10 +33,3 @@ class Tile_bag:
 
 
 bag_instance = Tile_bag(tiles)
-
-# Now you can call the methods on the instance
-bag_instance.refill()
-drawn_tiles = bag_instance.draw_tiles(7)
-print("Drawn tiles:", [tile.letter for tile in drawn_tiles])
-
-       
