@@ -1,10 +1,8 @@
 class Board:
     def __init__(self):
-        self.board = [[" " for _ in range(15)] for _ in range(15)]
+        self.board = [["   " for _ in range(15)] for _ in range(15)]
         self.add_cells()
         self.board[7][7] = " X "
-        
-        # Added Board class with constructor to initialize the game board
 
     def add_cells(self):
         TRIPLE_WORD_SCORE = [(0, 0), (7, 0), (14, 0), (0, 7), (14, 7), (0, 14), (7, 14), (14, 14)]
@@ -16,9 +14,6 @@ class Board:
                                (6, 6), (6, 8), (6, 12), (7, 3), (7, 11), (8, 2), (8, 6), (8, 8),
                                (8, 12), (11, 0), (11, 7), (11, 14), (12, 6), (12, 8), (14, 3), (14, 11)]
 
-        # coordinates To indicate the locations of special scoring squares on game board. 
-    
-    
         for co in TRIPLE_WORD_SCORE:
             self.board[co[0]][co[1]] = 'TWS'
         for co in DOUBLE_WORD_SCORE:
@@ -28,15 +23,10 @@ class Board:
         for co in DOUBLE_LETTER_SCORE:
             self.board[co[0]][co[1]] = 'DLS'
 
-        # The loops are for marking specific squares on the game board with their corresponding special scoring types: 
-        # Triple Word Score (TWS), 
-        # Double Word Score (DWS), 
-        # Triple Letter Score (TLS), and Double Letter Score (DLS).
-
     def get_board(self):
         board_str = "   |  " + "  |  ".join(str(item) for item in range(10)) + "  | " + "  | ".join(str(item) for item in range(10, 15)) + " |"
         board_str += "\n   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n"
-    
+
         formatted_rows = []
         for i, row in enumerate(self.board):
             row_str = " | ".join(str(item) for item in row)
@@ -44,62 +34,51 @@ class Board:
                 formatted_rows.append(f"{i}  | {row_str} |")
             else:
                 formatted_rows.append(f"{i} | {row_str} |")
-    
+
         row_separator = "\n   |_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|\n"
         board_str += row_separator.join(formatted_rows)
         board_str += "\n   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _"
         return board_str
-        
-        #a header row is created
-        #a line that seperate btwn the header and the board
-        #fixing each row with it's own row-index
-        #a horizontal line on the bottom board to give a visual border
-        
 
     def update_board(self, word, orientation, x, y):
-        if orientation == "horizontal":
+        if orientation == "right":
             for i, char in enumerate(word):
                 self.board[y][x + i] = f" {char} "
-        elif orientation == "vertical":
+        elif orientation == "down":
             for i, char in enumerate(word):
                 self.board[y + i][x] = f" {char} "
-        #Orientation check Changed  "horizontal" and "vertical" to correctly differentiate between the two orientations.
 
-        #Indexing Correction: Adjusted the indexing in both (horizontal and vertical) to correctly place each character of the word on the board.
-    
-    
-    
-    def place_holder(self, word, location, direction, player):
-        special_cells = []
-        direction = direction.lower()
-        word = word.upper()
-        if direction == "right":
-            for i in range(len(word)):
-                if self.board[location[0]][location[1] + i] != "  ":
-                    special_cells.append((word[i], self.board[location[1] + i]))
-                self.board[location[0]][location[1] + 1] = "" + word[i] + ""
-                
+    def display_board(self):
+        print(self.get_board())
         
-        elif direction == "down":
-            for i in range(len(word)):
-                if self.board[location[0] + i][location[1]] != "   ":
-                        special_cells.append((word[i], self.board[location[0] + i][location[1]]))
-                self.board[location[0] + i][location[1]] = " " + word[i] + " "
-                
-        #checks if the current cell is not if yes it stores the character to the special cell
-            
-            
-            for letter in word:
-                for tile in player.get_rack_arr():
-                    if tile.get_letter() == letter:
-                        player.rack.remove_fromrack(tile)
-                        break  # Ensure each tile is removed only once
-            
-            
-            #Removes the matching tile from the player's rack.
-            #Calls refill_rack method to refill the player's rack with new tiles from the bag.
-            
-            player.rack.refill_rack() # Refill the player's rack
-        
+class Word:
+    def __init__(self, word, location, player, direction, board_array):
+        self.word = word
+        self.location = location
+        self.player = player
+        self.direction = direction
+        self.board_array = board_array
+
+    def check_word(self):
+        if self.word in WORD_DICTIONARY:
+            return True
+        else:
+            return "Invalid word"
+
+    def calculate_word_score(self):
+        word_score = sum(LETTER_POINTS[letter] for letter in self.word)
+        self.player.update_score(word_score)
+
+    def set_word(self, word):
+        self.word = word
+
+    def set_location(self, location):
+        self.location = location
+
+    def set_direction(self, direction):
+        self.direction = direction
+
+    def get_word(self):
+        return self.word
         
         
