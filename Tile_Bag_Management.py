@@ -1,10 +1,15 @@
 import random
-
+WORD_DICTIONARY=[
+    "apple", "banana", "cat", "dog", "elephant", "frog", "giraffe", "house", "igloo", "jacket",
+    "kangaroo", "lion", "monkey", "nest", "ocean", "penguin", "quilt", "rabbit", "snake", "tiger",
+    "umbrella", "vase", "whale", "xylophone", "yacht", "zebra"]
 
 class Tile:
-    def __init__(self, letter,letter_points={}):
+    def __init__(self, letter,letter_points={},):
         self.letter= letter
+        self.word=word
         self.letter_points=letter_points.get(letter,0)
+        self.WORD_DICTIONARY= WORD_DICTIONARY.get(word,0)
 
 letter_points = {
     'A': 1, 'B': 3, 'C': 3, 'D': 2, 'E': 1, 'F': 4, 'G': 2, 'H': 4, 'I': 1, 'J': 8, 'K': 5, 'L': 1,
