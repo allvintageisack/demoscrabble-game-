@@ -1,5 +1,5 @@
 #class for computer player which inherits from player
-class computerplayer(player):
+class ComputerPlayer(Player):
     def generate_move(self):
         #it generates a random valid word,location and direction
         word = "TEST"
@@ -8,21 +8,22 @@ class computerplayer(player):
         return word,location,direction
 
 def turn(player,board,bag):
-    global round_number , players ,skipped_turns
+    # Begin a turn, display the current board, get the information to play a turn, and create a loop for the next turn
+    global round_number , skipped_turns
 
-    #if the game continues
-    if (skipped_turns < 6) or (player.rack.get_rack_length() == 0 and bag.get_remaining_tiles() == 0):
-        print("\nRound " + str(round_number)+": " + player.get_name() +"'s turn \n")
-        print(board.get_board())
-        print("\n" + player.get_name() + "'s Letter Rack:" + player.get_rack_str())
+    #game continueation conditions
+    if (skipped_turns < 6) or (len(player.rack) == 0 and len(bag.bag) == 0):
+        print("\nRound " + str(round_number)+": " + player.name() +"'s turn \n")
+        board.display_board()
+        print(player.display_rack())
 
-        if isinstance(player, computerplayer):
-            # creates move for computer player 
+        if isinstance(player, ComputerPlayer):
+            # computer player generates a move
             word_to_play, location , direction = player.generate_move()
             print(f"computer plays {word_to_play} at {location} {direction}")
         else:
             # human player plays 
-            word_to_play = input("word to play: ")
+            word_to_play = input("word to play: ") .upper()
             location = []
             col = input("colum number: ")
             row = input("Row number: ")  
@@ -30,20 +31,21 @@ def turn(player,board,bag):
                 location = [-1, -1]
             else:
                 location = [int(row), int(col)]
-            direction = input("Direction of words (right or down): ")
+            direction = input("Direction of words (right or down): ").lower()
 
-        word = word(word_to_play,location,player,direction,board.board_array())
-
+    #checks if thr word is valid
+        word = Word(word_to_play, location, player, direction, board.board)
         checked = word.check_word()
-        while checked!= True:
+
+        while not checked:
             print(checked)
-            if isinstance(player,computerplayer):
+            if isinstance(player,ComputerPlayer):
                 #creates a new move if the previous one was invalid
                 word_to_play,location ,direction = player.generate_move()
                 print(f"Computer plays {word_to_play} at {location} {direction}")
             else:
                 # Get new input from human player
-                word_to_play = input("Word to play: ")
+                word_to_play = input("Word to play: ").upper()
                 word.set_word(word_to_play)
                 location = []
                 col = input("Column number: ")
@@ -53,9 +55,10 @@ def turn(player,board,bag):
                 else:
                     word.set_location([int(row), int(col)])
                     location = [int(row), int(col)]
-                direction = input("Direction of word (right or down): ")
+                direction = input("Direction of word (right or down): ").lower()
                 word.set_direction(direction)
             checked = word.check_word()
+
         if word.get_word() == "":
             #skip turn if no valid word was given
             print("Turn skipped.")
@@ -63,45 +66,49 @@ def turn(player,board,bag):
 
         else:
             #place a word on the board
-            board.place_word(word_to_play,location,direction,player)
+            board.update_board(word_to_play, direction, location[1], location[0])
             word.calculate_word_score()
+            player.remove_tiles(word_to_play)  # Remove tiles used in the word
+            player.refill_rack(7 - len(player.rack))  # Refill the rack
             skipped_turns = 0
 
-        print("\n" + player.get_name() + "'s score is: " + str(player.get_score()))
+        print("\n" + player.name + "'s score is: " + str(player.get_score()))
+        if isinstance(player, ComputerPlayer):
+            print("Computer's score is: " + str(players[-1].get_score()))  # Display computer's score
 
-       #get the next player!
-
-        if players.index(player) != (len(players) -1):
-            next_player = players[players.index(player)+1]
+        # Determine next player
+        if players.index(player) != (len(players) - 1):
+            next_player = players[players.index(player) + 1]
         else:
-            next_player =players[0]
+            next_player = players[0]
             round_number += 1
 
-        #recursively(repeat!) call the turn function for the next player 
-        turn(next_player, board,bag)
+        # Recursive call for next player's turn
+        turn(next_player, board, bag)
     else:
-        #the game ends if conditions are not met
         end_game()
-          
+     
 def start_game():
+    # Start the game and call the turn function
     global round_number, players, skipped_turns
     board = Board()
-    bag = Bag() 
+    bag = TileBag(tiles)
 
-    num_of_players =int(input("\nPlease enter the number of players (1-4): "))
-    while num_of_players< 1 or num_of_players > 4:
-        num_of_players = int(input("This number is invalid. Please enter the number of players (1-4): "))
+    num_of_players = int(input("\nIf 1 + 1 = 2, what is 2 - 1 = "))
+    while num_of_players != 1:
+        num_of_players = int(input("Sorry, try again. You don't need Magic. What is 2 - 1 = "))
+    print("Correct! Now we can proceed.")
 
-    print("\nWelcome to Scrabble! Please enter the names of the players below.")
+    
+    print("\nWelcome to Scrabble! Please enter your name.")
     players = []
     for i in range(num_of_players):
-        players.append(player(bag))
-        players[i].set_name(input("Please enter player " + str(i+1) + "'s name: "))
-
-    #adds computer player 
-    players.append(ComputerPlayer(bag))
-    players[-1].set_name("Computer")
-
+        player_name = input("Please enter player " + str(i + 1) + "'s name: ")
+        players.append(Player(player_name))
+    
+    # Add computer player
+    players.append(ComputerPlayer("Computer"))
+    
     round_number = 1
     skipped_turns = 0
     current_player = players[0]
@@ -112,15 +119,18 @@ def end_game():
     highest_score = 0
     winning_player = ""
     for player in players:
-        if player.get_score > highest_score:
+        if player.get_score() > highest_score:
             highest_score = player.get_score()
-            winning_player = player.get_name()
+            winning_player = player.name
     print("The game is over! " + winning_player + ", you have won!")
-
+    
     if input("\nWould you like to play again? (y/n)").upper() == "Y":
         start_game()
 
-start_game()
+if _name_ == "_main_":
+    start_game()
+
+
 
 
 
