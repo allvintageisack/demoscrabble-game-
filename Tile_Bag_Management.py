@@ -16,6 +16,7 @@ letter_points = {
 }
 
 
+
 class Tile:
     def __init__(self, letter,letter_points={}):
         self.letter= letter
