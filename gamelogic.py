@@ -1,99 +1,106 @@
-#class for computer player which inherits from player
 class ComputerPlayer(Player):
-    def generate_move(self):
-        #it generates a random valid word,location and direction
-        word = "TEST"
-        location = [random.randint(0, 14), random.randint(0, 14)]
-        direction = random.choice(["right","down"])
-        return word,location,direction
+    def generate_move(self, board):
+        valid_word = False
+        while not valid_word:
+            word_to_play = random.choice(list(WORD_DICTIONARY))
+            word_length = len(word_to_play)
 
-def turn(player,board,bag):
-    # Begin a turn, display the current board, get the information to play a turn, and create a loop for the next turn
-    global round_number , skipped_turns
+            # Choose a random starting position and direction
+            if random.random() < 0.5:
+                direction = "right"
+                max_col = 15 - word_length
+                col = random.randint(0, max_col)
+                row = random.randint(0, 14)
+            else:
+                direction = "down"
+                col = random.randint(0, 14)
+                max_row = 15 - word_length
+                row = random.randint(0, max_row)
 
-    #game continueation conditions
+           
+            if direction == "right":
+                if all(board.board[row][col + i] == "   " for i in range(word_length)):
+                    valid_word = True
+            elif direction == "down":
+                if all(board.board[row + i][col] == "   " for i in range(word_length)):
+                    valid_word = True
+
+        return word_to_play, [row, col], direction
+
+
+def turn(player, board, bag):
+    global round_number, skipped_turns
+
+    if len(Word.played_words) == len(WORD_DICTIONARY):
+        end_game()
+        return
+
     if (skipped_turns < 6) or (len(player.rack) == 0 and len(bag.bag) == 0):
-        print("\nRound " + str(round_number)+": " + player.name() +"'s turn \n")
+        print("\nRound " + str(round_number) + ": " + player.name + "'s turn \n")
         board.display_board()
         print(player.display_rack())
 
         if isinstance(player, ComputerPlayer):
-            # computer player generates a move
-            word_to_play, location , direction = player.generate_move()
-            print(f"computer plays {word_to_play} at {location} {direction}")
+            word_to_play, location, direction = player.generate_move(board)
+            word = Word(word_to_play, location, player, direction, board.board)
         else:
-            # human player plays 
-            word_to_play = input("word to play: ") .upper()
-            location = []
-            col = input("colum number: ")
-            row = input("Row number: ")  
-            if(col == "" or row == "") or (col not in [str(x) for x in range(15)] or row not in [str(x) for x in range(15)]):
-                location = [-1, -1]
-            else:
-                location = [int(row), int(col)]
-            direction = input("Direction of words (right or down): ").lower()
+            valid_word = False
+            while not valid_word:
+                word_to_play = input("Word to play (or type 'SHUFFLE' to shuffle your rack): ").upper()
+                if word_to_play == "SHUFFLE":
+                    player.shuffle_rack()
+                    print("Rack shuffled. New rack:")
+                    print(player.display_rack())
+                    continue
+                if word_to_play in WORD_DICTIONARY:
+                    valid_word = True
+                    col = int(input("Column number: "))  # Convert input to integer
+                    row = int(input("Row number: "))  # Convert input to integer
+                    direction = input("Direction of word (right or down): ").lower()
 
-    #checks if thr word is valid
-        word = Word(word_to_play, location, player, direction, board.board)
-        checked = word.check_word()
-
-        while not checked:
-            print(checked)
-            if isinstance(player,ComputerPlayer):
-                #creates a new move if the previous one was invalid
-                word_to_play,location ,direction = player.generate_move()
-                print(f"Computer plays {word_to_play} at {location} {direction}")
-            else:
-                # Get new input from human player
-                word_to_play = input("Word to play: ").upper()
-                word.set_word(word_to_play)
-                location = []
-                col = input("Column number: ")
-                row = input("Row number: ")
-                if (col == "" or row == "") or (col not in [str(x) for x in range(15)] or row not in [str(x) for x in range(15)]):
-                    location = [-1, -1]
+                    word = Word(word_to_play, (row, col), player, direction, board.board)
                 else:
-                    word.set_location([int(row), int(col)])
-                    location = [int(row), int(col)]
-                direction = input("Direction of word (right or down): ").lower()
-                word.set_direction(direction)
-            checked = word.check_word()
+                    print("Invalid word. Try again.")
 
-        if word.get_word() == "":
-            #skip turn if no valid word was given
+        if word_to_play == "":
             print("Turn skipped.")
-            skipped_turns +=1
-
+            skipped_turns += 1
         else:
-            #place a word on the board
-            board.update_board(word_to_play, direction, location[1], location[0])
-            word.calculate_word_score()
-            player.remove_tiles(word_to_play)  # Remove tiles used in the word
-            player.refill_rack(7 - len(player.rack))  # Refill the rack
+            if word.check_word():
+                word.calculate_word_score()  # Calculate score here
+                word.place_on_board()  # Place word on the board
+                player.remove_tiles(word_to_play)
+                player.refill_rack(7 - len(player.rack))
+                # Display the word played and its score
+                print(f"\n{player.name} played '{word.get_word()}' for {word.score} points.")
+            else:
+                print("Invalid word placement.")
             skipped_turns = 0
 
         print("\n" + player.name + "'s score is: " + str(player.get_score()))
-        if isinstance(player, ComputerPlayer):
-            print("Computer's score is: " + str(players[-1].get_score()))  # Display computer's score
 
-        # Determine next player
+        if isinstance(player, ComputerPlayer):
+            print("Computer's score is: " + str(players[-1].get_score()))
+        else:
+            print("\n" + player.name + "'s score is: " + str(player.get_score()))
+
         if players.index(player) != (len(players) - 1):
             next_player = players[players.index(player) + 1]
         else:
             next_player = players[0]
             round_number += 1
 
-        # Recursive call for next player's turn
         turn(next_player, board, bag)
     else:
         end_game()
-     
+
+
+
 def start_game():
-    # Start the game and call the turn function
     global round_number, players, skipped_turns
     board = Board()
     bag = TileBag(tiles)
-
+    
     num_of_players = int(input("\nIf 1 + 1 = 2, what is 2 - 1 = "))
     while num_of_players != 1:
         num_of_players = int(input("Sorry, try again. You don't need Magic. What is 2 - 1 = "))
@@ -106,7 +113,6 @@ def start_game():
         player_name = input("Please enter player " + str(i + 1) + "'s name: ")
         players.append(Player(player_name))
     
-    # Add computer player
     players.append(ComputerPlayer("Computer"))
     
     round_number = 1
@@ -125,12 +131,7 @@ def end_game():
     print("The game is over! " + winning_player + ", you have won!")
     
     if input("\nWould you like to play again? (y/n)").upper() == "Y":
-        start_game()
+        print("Restart the Game")
 
 if _name_ == "_main_":
     start_game()
-
-
-
-
-
