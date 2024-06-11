@@ -81,14 +81,26 @@ class Word:
         self.player.update_score(self.score)
         Word.played_words.add(self.word.upper())
 
-    def set_word(self, word):
-        self.word = word
+    def place_on_board(self):
+        x, y = self.location
+        if self.direction == "right":
+            for i, char in enumerate(self.word):
+                self.board_array[y][x + i] = f" {char} "
+        elif self.direction == "down":
+            for i, char in enumerate(self.word):
+                self.board_array[y + i][x] = f" {char} "
 
-    def set_location(self, location):
-        self.location = location
-
-    def set_direction(self, direction):
-        self.direction = direction
+    def remove_from_board(self):
+        x, y = self.location
+        if self.direction == "right":
+            for i in range(len(self.word)):
+                self.board_array[y][x + i] = "   "
+        elif self.direction == "down":
+            for i in range(len(self.word)):
+                self.board_array[y + i][x] = "   "
 
     def get_word(self):
         return self.word
+
+    def get_score(self):
+        return self.score
