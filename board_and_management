@@ -50,8 +50,18 @@ class Board:
 
     def display_board(self):
         print(self.get_board())
+
+    def remove_word(self, word, direction, x, y):
+        """Remove a word from the board."""
+        if direction == "right":
+            for i in range(len(word)):
+                self.board[y][x + i] = "   "
+        elif direction == "down":
+            for i in range(len(word)):
+                self.board[y + i][x] = "   "
         
 class Word:
+    played_words = set() 
     def __init__(self, word, location, player, direction, board_array):
         self.word = word
         self.location = location
