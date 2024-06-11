@@ -61,23 +61,25 @@ class Board:
                 self.board[y + i][x] = "   "
         
 class Word:
-    played_words = set() 
+
     def __init__(self, word, location, player, direction, board_array):
         self.word = word
         self.location = location
         self.player = player
         self.direction = direction
         self.board_array = board_array
+        self.score = 0 
 
     def check_word(self):
-        if self.word in WORD_DICTIONARY:
+        if self.word.upper() in WORD_DICTIONARY and self.word.upper() not in Word.played_words:
             return True
         else:
-            return "Invalid word"
+            return False
 
     def calculate_word_score(self):
-        word_score = sum(LETTER_POINTS[letter] for letter in self.word)
-        self.player.update_score(word_score)
+        self.score = sum(LETTER_POINTS[letter] for letter in self.word)
+        self.player.update_score(self.score)
+        Word.played_words.add(self.word.upper())
 
     def set_word(self, word):
         self.word = word
