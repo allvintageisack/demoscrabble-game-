@@ -1,21 +1,25 @@
 import random
-WORD_DICTIONARY=[
-    "apple", "banana", "cat", "dog", "elephant", "frog", "giraffe", "house", "igloo", "jacket",
-    "kangaroo", "lion", "monkey", "nest", "ocean", "penguin", "quilt", "rabbit", "snake", "tiger",
-    "umbrella", "vase", "whale", "xylophone", "yacht", "zebra"]
 
-class Tile:
-    def __init__(self, letter,letter_points={},):
-        self.letter= letter
-        self.word=word
-        self.letter_points=letter_points.get(letter,0)
-        self.WORD_DICTIONARY= WORD_DICTIONARY.get(word,0)
+WORD_DICTIONARY={
+ "APPLE", "BANANA", "CAT", "DOG", "ELEPHANT", "FROG", "GIRAFFE", "HOUSE", "JACKET", 
+ "KANGAROO", "LION", "MONKEY", "NEST", "OCEAN", "RABBIT", "SNAKE", "TIGER", 
+ "UMBRELLA", "VASE", "WHALE", "ZEBRA","HELLO", "WORLD", "PYTHON", "SCRABBLE", 
+ "COMPUTER", "PLAYER", "LETTER","BOARD", "SCORE", "TILE", "GAME", "RACK", "BAG", "WORD", "MOVE", "PLAY",
+"WINNER", "LOSER", "TURN", "RULES", "VALID", "INVALID", "START", "END"}
+
+
 
 letter_points = {
     'A': 1, 'B': 3, 'C': 3, 'D': 2, 'E': 1, 'F': 4, 'G': 2, 'H': 4, 'I': 1, 'J': 8, 'K': 5, 'L': 1,
     'M': 3, 'N': 1, 'O': 1, 'P': 3, 'Q': 10, 'R': 1, 'S': 1, 'T': 1, 'U': 1, 'V': 4, 'W': 4, 'X': 8,
     'Y': 4, 'Z': 10
 }
+
+
+class Tile:
+    def __init__(self, letter,letter_points={}):
+        self.letter= letter
+        self.letter_points=letter_points.get(letter,0)
 
 tiles = [Tile(letter,letter_points) for letter in letter_points.keys()]
 
