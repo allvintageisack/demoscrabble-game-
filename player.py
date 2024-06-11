@@ -13,7 +13,7 @@ class Player:
 
     def initialize_rack(self, num_tiles=7):
         # Use letters from the dictionary and shuffle them
-        tile_bag = list("".join(WORD_DICTIONARY))
+        tile_bag= list("".join(WORD_DICTIONARY))
         random.shuffle(tile_bag)
         self.rack = random.sample(tile_bag, num_tiles)
 
