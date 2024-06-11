@@ -17,14 +17,14 @@ letter_points = {
 
 
 class Tile:
-    def __init__(self, letter,letter_points={}):
+    def _init_(self, letter,letter_points={}):
         self.letter= letter
         self.letter_points=letter_points.get(letter,0)
 
 tiles = [Tile(letter,letter_points) for letter in letter_points.keys()]
 
 class Tile_bag:
-    def __init__(self, bag):
+    def _init_(self, bag):
         self.bag=bag
 
     def refill(self):
