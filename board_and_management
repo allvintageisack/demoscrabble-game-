@@ -80,5 +80,3 @@ class Word:
 
     def get_word(self):
         return self.word
-        
-        
