@@ -1,3 +1,5 @@
+from tile_and_bag import LETTER_POINTS, WORD_DICTIONARY
+
 class Board:
     def __init__(self):
         self.board = [["   " for _ in range(15)] for _ in range(15)]
@@ -59,8 +61,16 @@ class Board:
         elif direction == "down":
             for i in range(len(word)):
                 self.board[y + i][x] = "   "
-        
+                
+    def is_cell_available(self, word, orientation, x, y):
+        if orientation == "right":
+            return all(self.board[y][x + i] == "   " for i in range(len(word)))
+        elif orientation == "down":
+            return all(self.board[y + i][x] == "   " for i in range(len(word)))
+        return False
+
 class Word:
+    played_words = set()
 
     def __init__(self, word, location, player, direction, board_array):
         self.word = word
@@ -68,7 +78,7 @@ class Word:
         self.player = player
         self.direction = direction
         self.board_array = board_array
-        self.score = 0 
+        self.score = 0
 
     def check_word(self):
         if self.word.upper() in WORD_DICTIONARY and self.word.upper() not in Word.played_words:

@@ -1,8 +1,7 @@
+from tile_and_bag import WORD_DICTIONARY
 import random
+from string import ascii_uppercase
 from collections import Counter
-
-WORD_DICTIONARY = ["example", "words", "for", "scrabble", "game"]  # Example word list
-
 class Player:
     def __init__(self, name):
         self.name = name
