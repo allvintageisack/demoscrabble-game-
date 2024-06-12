@@ -1,8 +1,7 @@
 import random
 from collections import Counter
 
-# Assuming WORD_DICTIONARY is a global variable containing valid words or letters
-WORD_DICTIONARY = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+WORD_DICTIONARY = ["example", "words", "for", "scrabble", "game"]  # Example word list
 
 class Player:
     def __init__(self, name):
@@ -12,16 +11,15 @@ class Player:
         self.initialize_rack()
 
     def initialize_rack(self, num_tiles=7):
-        # Use letters from the dictionary and shuffle them
-        tile_bag= list("".join(WORD_DICTIONARY))
-        random.shuffle(tile_bag)
-        self.rack = random.sample(tile_bag, num_tiles)
+        while len(self.rack) < num_tiles:
+            word = random.choice(list(WORD_DICTIONARY))
+            scrambled_word = list(word)
+            random.shuffle(scrambled_word)
+            self.rack.extend(scrambled_word)
+            self.rack = self.rack[:num_tiles]  # Ensure rack has exactly num_tiles
 
-    def refill_rack(self, num_tiles):
-        tile_bag = list("".join(WORD_DICTIONARY))
-        available_tiles = [tile for tile in tile_bag if tile not in self.rack]
-        new_tiles = random.sample(available_tiles, num_tiles)
-        self.rack.extend(new_tiles)
+    def refill_rack(self):
+        self.initialize_rack()
 
     def remove_tiles(self, tiles):
         for tile in tiles:
@@ -38,3 +36,9 @@ class Player:
 
     def get_score(self):
         return self.score
+
+    def shuffle_rack(self):
+        random.shuffle(self.rack)
+
+    def set_rack(self, rack):
+        self.rack = rack
