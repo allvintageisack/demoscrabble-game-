@@ -166,21 +166,12 @@ class Word:
         elif self.direction == "down":
             for i, char in enumerate(self.word):
                 self.board[y + i][x] = f" {char} "
-<<<<<<< HEAD
-
-    def remove_from_board(self):
-        x, y = self.location
-        if self.direction == "right":
-            for i in range(len(self.word)):
-                self.board[y][x + i] = "   "
-        elif self.direction == "down":
-            for i in range(len(self.word)):
-                self.board[y + i][x] = "   "
-=======
->>>>>>> e43f1a8ffae28d01376642ba4562fb3e51483877
 
     def get_word(self):
         return self.word
+
+    def get_score(self):
+        return self.score
 
 class ComputerPlayer(Player):
     def generate_move(self, board):
@@ -199,20 +190,6 @@ class ComputerPlayer(Player):
             else:
                 for row in range(15):
                     for col in range(15):
-<<<<<<< HEAD
-                        if board.board[row][col].strip() != "":
-                            for i in range(word_length):
-                                # Check if word can be placed to the right
-                                if col + i < 15 and board.is_cell_available(word_to_play, "right", col, row):
-                                    if any(board.board[row][col + j].strip() != "" for j in range(word_length)):
-                                        direction = "right"
-                                        valid_word = True
-                                        break
-                                # Check if word can be placed downwards
-                                if row + i < 15 and board.is_cell_available(word_to_play, "down", col, row):
-                                    if any(board.board[row + j][col].strip() != "" for j in range(word_length)):
-                                        direction = "down"
-=======
                         if board.board[row][col] != "   ":
                             for i in range(word_length):
                                 if col + i < 15 and all(board.board[row][col + j] in ["   ", f" {word_to_play[j]} "] for j in range(word_length)):
@@ -223,7 +200,6 @@ class ComputerPlayer(Player):
                                 if row + i < 15 and all(board.board[row + j][col] in ["   ", f" {word_to_play[j]} "] for j in range(word_length)):
                                     direction = "down"
                                     if any(board.board[row + j][col] != "   " for j in range(word_length)):
->>>>>>> e43f1a8ffae28d01376642ba4562fb3e51483877
                                         valid_word = True
                                         break
                         if valid_word:
@@ -235,7 +211,6 @@ class ComputerPlayer(Player):
                 valid_word = False
 
         return word_to_play, [row, col], direction
-
 
 def turn(player, board, bag):
     global round_number, skipped_turns
