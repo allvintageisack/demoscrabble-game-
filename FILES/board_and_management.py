@@ -1,5 +1,4 @@
-from tile_and_bag import LETTER_POINTS, WORD_DICTIONARY
-
+from tile_and_bag import WORD_DICTIONARY, LETTER_POINTS
 class Board:
     def __init__(self):
         self.board = [["   " for _ in range(15)] for _ in range(15)]
@@ -53,31 +52,22 @@ class Board:
     def display_board(self):
         print(self.get_board())
 
-    def remove_word(self, word, direction, x, y):
-        """Remove a word from the board."""
-        if direction == "right":
-            for i in range(len(word)):
-                self.board[y][x + i] = "   "
-        elif direction == "down":
-            for i in range(len(word)):
-                self.board[y + i][x] = "   "
-                
     def is_cell_available(self, word, orientation, x, y):
         if orientation == "right":
-            return all(self.board[y][x + i] == "   " for i in range(len(word)))
+            return all(self.board[y][x + i] == "   " or self.board[y][x + i] == f" {word[i]} " for i in range(len(word)))
         elif orientation == "down":
-            return all(self.board[y + i][x] == "   " for i in range(len(word)))
+            return all(self.board[y + i][x] == "   " or self.board[y + i][x] == f" {word[i]} " for i in range(len(word)))
         return False
 
 class Word:
     played_words = set()
 
-    def __init__(self, word, location, player, direction, board_array):
+    def __init__(self, word, location, player, direction, board):
         self.word = word
         self.location = location
         self.player = player
         self.direction = direction
-        self.board_array = board_array
+        self.board = board
         self.score = 0
 
     def check_word(self):
@@ -95,19 +85,10 @@ class Word:
         x, y = self.location
         if self.direction == "right":
             for i, char in enumerate(self.word):
-                self.board_array[y][x + i] = f" {char} "
+                self.board[y][x + i] = f" {char} "
         elif self.direction == "down":
             for i, char in enumerate(self.word):
-                self.board_array[y + i][x] = f" {char} "
-
-    def remove_from_board(self):
-        x, y = self.location
-        if self.direction == "right":
-            for i in range(len(self.word)):
-                self.board_array[y][x + i] = "   "
-        elif self.direction == "down":
-            for i in range(len(self.word)):
-                self.board_array[y + i][x] = "   "
+                self.board[y + i][x] = f" {char} "
 
     def get_word(self):
         return self.word
