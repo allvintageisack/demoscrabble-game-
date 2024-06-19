@@ -15,7 +15,7 @@ This is a Python implementation of the classic board game Scrabble. The game all
 * Tile Management: Players can draw tiles from a bag and refill their racks.
 * Board Interactions: Words can be placed horizontally or vertically on the board, taking advantage of score multipliers.
 # Requirements
-* Python 3.10.12
+* Python  environment
 * Standard Python libraries (random, collections)
 # Setup Instructions
 1. Clone the repository:
@@ -24,7 +24,7 @@ This is a Python implementation of the classic board game Scrabble. The game all
 git clone https://github.com/Joy-Mbuvi/SCRABBLE-GAME-.git
 
 ```
-2. Ensure you have Python 3.10.12 installed. You can download it from [python.org](https://www.python.org/downloads/) 
+2. Ensure you have Python environment installed. You can download it from [python.org](https://www.python.org/downloads/) 
 
 3. Run the game:
 
@@ -47,8 +47,6 @@ The main components of the code include:
 Contributions are welcome! If you have any suggestions or find a bug, please open an issue or submit a pull request.
 
 
-## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
 
 
