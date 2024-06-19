@@ -2,12 +2,10 @@ import random
 from string import ascii_uppercase
 from collections import Counter
 
-with open('dict.txt','r')as file:
-    words=[word.strip().upper() for word in file.readlines()]
+with open('dict.txt', 'r') as file:
+    words = [word.strip().upper() for word in file.readlines()]
 
-
-WORD_DICTIONARY= set(words)
-
+WORD_DICTIONARY = set(words)
 
 LETTER_POINTS = {
     'A': 1, 'B': 3, 'C': 3, 'D': 2, 'E': 1, 'F': 4, 'G': 2, 'H': 4, 'I': 1, 'J': 8, 'K': 5, 'L': 1,
@@ -142,20 +140,20 @@ class Board:
                 
     def is_cell_available(self, word, orientation, x, y):
         if orientation == "right":
-            return all(self.board[y][x + i] == "   " for i in range(len(word)))
+            return all(self.board[y][x + i] == "   " or self.board[y][x + i] == f" {word[i]} " for i in range(len(word)))
         elif orientation == "down":
-            return all(self.board[y + i][x] == "   " for i in range(len(word)))
+            return all(self.board[y + i][x] == "   " or self.board[y + i][x] == f" {word[i]} " for i in range(len(word)))
         return False
 
 class Word:
     played_words = set()
 
-    def __init__(self, word, location, player, direction, board_array):
+    def __init__(self, word, location, player, direction, board):
         self.word = word
         self.location = location
         self.player = player
         self.direction = direction
-        self.board_array = board_array
+        self.board = board
         self.score = 0
 
     def check_word(self):
@@ -173,25 +171,22 @@ class Word:
         x, y = self.location
         if self.direction == "right":
             for i, char in enumerate(self.word):
-                self.board_array[y][x + i] = f" {char} "
+                self.board[y][x + i] = f" {char} "
         elif self.direction == "down":
             for i, char in enumerate(self.word):
-                self.board_array[y + i][x] = f" {char} "
+                self.board[y + i][x] = f" {char} "
 
     def remove_from_board(self):
         x, y = self.location
         if self.direction == "right":
             for i in range(len(self.word)):
-                self.board_array[y][x + i] = "   "
+                self.board[y][x + i] = "   "
         elif self.direction == "down":
             for i in range(len(self.word)):
-                self.board_array[y + i][x] = "   "
+                self.board[y + i][x] = "   "
 
     def get_word(self):
         return self.word
-
-    def get_score(self):
-        return self.score
 
 class ComputerPlayer(Player):
     def generate_move(self, board):
@@ -199,28 +194,41 @@ class ComputerPlayer(Player):
         while not valid_word:
             word_to_play = random.choice(list(WORD_DICTIONARY))
             word_length = len(word_to_play)
-            if random.random() < 0.5:
-                direction = "right"
-                max_col = 15 - word_length
-                col = random.randint(0, max_col)
-                row = random.randint(0, 14)
-            else:
-                direction = "down"
-                col = random.randint(0, 14)
-                max_row = 15 - word_length
-                row = random.randint(0, max_row)
 
-            if direction == "right":
-                if all(board.board[row][col + i] == "   " for i in range(word_length)):
+            if len(Word.played_words) == 0:  # First move must start at the center
+                direction = random.choice(["right", "down"])
+                row, col = 7, 7
+                if direction == "right" and col + word_length <= 15:
                     valid_word = True
-            elif direction == "down":
-                if all(board.board[row + i][col] == "   " for i in range(word_length)):
+                elif direction == "down" and row + word_length <= 15:
                     valid_word = True
+            else:
+                for row in range(15):
+                    for col in range(15):
+                        if board.board[row][col].strip() != "":
+                            for i in range(word_length):
+                                # Check if word can be placed to the right
+                                if col + i < 15 and board.is_cell_available(word_to_play, "right", col, row):
+                                    if any(board.board[row][col + j].strip() != "" for j in range(word_length)):
+                                        direction = "right"
+                                        valid_word = True
+                                        break
+                                # Check if word can be placed downwards
+                                if row + i < 15 and board.is_cell_available(word_to_play, "down", col, row):
+                                    if any(board.board[row + j][col].strip() != "" for j in range(word_length)):
+                                        direction = "down"
+                                        valid_word = True
+                                        break
+                        if valid_word:
+                            break
+                    if valid_word:
+                        break
 
             if word_to_play in Word.played_words:
                 valid_word = False
 
         return word_to_play, [row, col], direction
+
 
 def turn(player, board, bag):
     global round_number, skipped_turns
@@ -248,10 +256,22 @@ def turn(player, board, bag):
                     continue
                 if word_to_play in WORD_DICTIONARY and word_to_play not in Word.played_words:
                     valid_word = True
-                    row = int(input("Row number: "))
-                    col = int(input("Column number: "))
-                     
-                    direction = input("Direction of word (right or down): ").lower()
+                    if len(Word.played_words) == 0:
+                        row, col = 7, 7
+                        direction = input("Direction of word (right or down): ").lower()
+                    else:
+                        row = int(input("Row number: "))
+                        col = int(input("Column number: "))
+                        direction = input("Direction of word (right or down): ").lower()
+                        if direction not in ["right", "down"]:
+                            print("Invalid direction. Try again.")
+                            valid_word = False
+                            continue
+
+                        if not board.is_cell_available(word_to_play, direction, col, row):
+                            print("Word cannot be placed there. Try again.")
+                            valid_word = False
+                            continue
 
                     word = Word(word_to_play, (col, row), player, direction, board.board)
                 else:
@@ -263,7 +283,7 @@ def turn(player, board, bag):
         else:
             if word.check_word():
                 word.calculate_word_score()
-                word.place_on_board() 
+                word.place_on_board()
                 player.remove_tiles(word_to_play)
                 player.refill_rack()
                 # Display the word played and its score
