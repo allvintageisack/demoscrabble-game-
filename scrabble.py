@@ -129,15 +129,6 @@ class Board:
     def display_board(self):
         print(self.get_board())
 
-    def remove_word(self, word, direction, x, y):
-        """Remove a word from the board."""
-        if direction == "right":
-            for i in range(len(word)):
-                self.board[y][x + i] = "   "
-        elif direction == "down":
-            for i in range(len(word)):
-                self.board[y + i][x] = "   "
-                
     def is_cell_available(self, word, orientation, x, y):
         if orientation == "right":
             return all(self.board[y][x + i] == "   " or self.board[y][x + i] == f" {word[i]} " for i in range(len(word)))
@@ -175,6 +166,7 @@ class Word:
         elif self.direction == "down":
             for i, char in enumerate(self.word):
                 self.board[y + i][x] = f" {char} "
+<<<<<<< HEAD
 
     def remove_from_board(self):
         x, y = self.location
@@ -184,6 +176,8 @@ class Word:
         elif self.direction == "down":
             for i in range(len(self.word)):
                 self.board[y + i][x] = "   "
+=======
+>>>>>>> e43f1a8ffae28d01376642ba4562fb3e51483877
 
     def get_word(self):
         return self.word
@@ -205,6 +199,7 @@ class ComputerPlayer(Player):
             else:
                 for row in range(15):
                     for col in range(15):
+<<<<<<< HEAD
                         if board.board[row][col].strip() != "":
                             for i in range(word_length):
                                 # Check if word can be placed to the right
@@ -217,6 +212,18 @@ class ComputerPlayer(Player):
                                 if row + i < 15 and board.is_cell_available(word_to_play, "down", col, row):
                                     if any(board.board[row + j][col].strip() != "" for j in range(word_length)):
                                         direction = "down"
+=======
+                        if board.board[row][col] != "   ":
+                            for i in range(word_length):
+                                if col + i < 15 and all(board.board[row][col + j] in ["   ", f" {word_to_play[j]} "] for j in range(word_length)):
+                                    direction = "right"
+                                    if any(board.board[row][col + j] != "   " for j in range(word_length)):
+                                        valid_word = True
+                                        break
+                                if row + i < 15 and all(board.board[row + j][col] in ["   ", f" {word_to_play[j]} "] for j in range(word_length)):
+                                    direction = "down"
+                                    if any(board.board[row + j][col] != "   " for j in range(word_length)):
+>>>>>>> e43f1a8ffae28d01376642ba4562fb3e51483877
                                         valid_word = True
                                         break
                         if valid_word:
@@ -304,12 +311,11 @@ def turn(player, board, bag):
     else:
         end_game()
 
-
 def start_game():
     global round_number, players, skipped_turns
     board = Board()
     bag = Tile_bag(tiles)
-    
+
     num_of_players = int(input("\nIf 1 + 1 = 2, what is 2 - 1 = "))
     while num_of_players != 1:
         num_of_players = int(input("Sorry, try again. You don't need Magic. What is 2 - 1 = "))
@@ -320,9 +326,9 @@ def start_game():
     for i in range(num_of_players):
         player_name = input("Please enter player your name: ")
         players.append(Player(player_name))
-    
+
     players.append(ComputerPlayer("Computer"))
-    
+
     round_number = 1
     skipped_turns = 0
     current_player = players[0]
@@ -337,9 +343,10 @@ def end_game():
             highest_score = player.get_score()
             winning_player = player.name
     print("The game is over! " + winning_player + ", won!")
-    
+
     if input("\nWould you like to play again? (y/n)").upper() == "Y":
         print("Restart the Game")
+        start_game()
 
 if __name__ == "__main__":
     start_game()
