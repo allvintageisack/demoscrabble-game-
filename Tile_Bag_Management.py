@@ -1,15 +1,14 @@
 import random
 
-WORD_DICTIONARY={
- "APPLE", "BANANA", "CAT", "DOG", "ELEPHANT", "FROG", "GIRAFFE", "HOUSE", "JACKET", 
- "KANGAROO", "LION", "MONKEY", "NEST", "OCEAN", "RABBIT", "SNAKE", "TIGER", 
- "UMBRELLA", "VASE", "WHALE", "ZEBRA","HELLO", "WORLD", "PYTHON", "SCRABBLE", 
- "COMPUTER", "PLAYER", "LETTER","BOARD", "SCORE", "TILE", "GAME", "RACK", "BAG", "WORD", "MOVE", "PLAY",
-"WINNER", "LOSER", "TURN", "RULES", "VALID", "INVALID", "START", "END"}
+
+with open('dict.txt','r')as file:
+    words=[words.strip().upper() for word in file.readlines()]
 
 
+WORD_DICTIONARY= set(words)
 
-letter_points = {
+
+LETTER_POINTS = {
     'A': 1, 'B': 3, 'C': 3, 'D': 2, 'E': 1, 'F': 4, 'G': 2, 'H': 4, 'I': 1, 'J': 8, 'K': 5, 'L': 1,
     'M': 3, 'N': 1, 'O': 1, 'P': 3, 'Q': 10, 'R': 1, 'S': 1, 'T': 1, 'U': 1, 'V': 4, 'W': 4, 'X': 8,
     'Y': 4, 'Z': 10
@@ -17,14 +16,14 @@ letter_points = {
 
 
 class Tile:
-    def __init__(self, letter,letter_points={}):
+    def _init_(self, letter,LETTER_POINTS={}):
         self.letter= letter
-        self.letter_points=letter_points.get(letter,0)
+        self.LETTER_POINTS=LETTER_POINTS.get(letter,0)
 
-tiles = [Tile(letter,letter_points) for letter in letter_points.keys()]
+tiles = [Tile(letter,LETTER_POINTS) for letter in LETTER_POINTS.keys()]
 
 class Tile_bag:
-    def __init__(self, bag):
+    def _init_(self, bag):
         self.bag=bag
 
     def refill(self):
