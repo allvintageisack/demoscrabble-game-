@@ -8,7 +8,7 @@ This is a Python implementation of the classic board game Scrabble. The game all
 * Gameplay Instructions
 * Code Structure
 * Contributing
-* License
+  
 # Features
 * Players: Supports a human player and one computer player.
 * Scoring: Calculates scores based on letter points and word multipliers on the board.
