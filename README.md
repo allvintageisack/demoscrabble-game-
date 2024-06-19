@@ -43,6 +43,7 @@ The main components of the code include:
 * scrabble.py: The main Python script that implements the game logic.
 * Tile, Tile_bag, Player, ComputerPlayer: Classes defining tiles, the tile bag, player actions, and computer player behavior.
 * Board, Word: Classes managing the game board and words played on it.
+
 # Contributing
 Contributions are welcome! If you have any suggestions or find a bug, please open an issue or submit a pull request.
 
