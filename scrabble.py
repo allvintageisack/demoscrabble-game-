@@ -13,7 +13,7 @@ LETTER_POINTS = {
 class Tile:
     def __init__(self, letter, LETTER_POINTS={}):
         self.letter = letter
-        self.point = LETTER_POINTS.get(letter, 0)
+        self.LETTER_POINTS = LETTER_POINTS.get(letter, 0)
 
 tiles = [Tile(letter, LETTER_POINTS) for letter in LETTER_POINTS.keys()]
 
