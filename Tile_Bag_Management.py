@@ -1,8 +1,7 @@
 import random
 
-
 with open('dict.txt','r')as file:
-    words=[words.strip().upper() for word in file.readlines()]
+    words=[word.strip().upper() for word in file.readlines()]
 
 
 WORD_DICTIONARY= set(words)
