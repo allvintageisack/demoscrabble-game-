@@ -13,13 +13,20 @@ class Computer(Player):
         column = 0
         row = 0
         direction = ""
-        
         valid_word = False
 
         while not valid_word:
             word_to_play= random.choice(list(word_dictionary))
             #randomly selects a word from the word_dictionary 
+            length_of_chosen_word = len(word_to_play)
             
+            if len(Word.played_words) == 0:
+                direction = random.choice(["right","down"])
+                row,column = 7, 7
+
+                if (direction == "right" and column + length_of_chosen_word<= 15) or (direction == "down" and row + length_of_chosen_word <= 15):
+                    valid_word = True
+        else:
             for row in range (15):
                 for column in range(15):
                  if  board.board [row][column] != " " : 
