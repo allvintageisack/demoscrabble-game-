@@ -1,10 +1,13 @@
 class Board:
     def __init__(self):
         self.board = [["   " for _ in range(15)] for _ in range(15)]
+         #we initialize a board with empty spaces
         self.add_cells()
+        #adds scoring cells to the board
         self.board[7][7] = " X "
+        # set the center cell to indicate the starting point
 
-    def add_cells(self):
+    def add_cells(self): # Define coordinates  for tws,dws,tls & dls
         triple_word_score = [(0, 0), (7, 0), (14, 0), (0, 7), (14, 7), (0, 14), (7, 14), (14, 14)]
         double_word_score = [(1, 1), (2, 2), (3, 3), (4, 4), (1, 13), (2, 12), (3, 11), (4, 10),
                              (13, 1), (12, 2), (11, 3), (10, 4), (13, 13), (12, 12), (11, 11), (10, 10)]
@@ -13,7 +16,7 @@ class Board:
         double_letter_score = [(0, 3), (0, 11), (2, 6), (2, 8), (3, 0), (3, 7), (3, 14), (6, 2),
                                (6, 6), (6, 8), (6, 12), (7, 3), (7, 11), (8, 2), (8, 6), (8, 8),
                                (8, 12), (11, 0), (11, 7), (11, 14), (12, 6), (12, 8), (14, 3), (14, 11)]
-
+        # place tws,dws,tls & dls on the board 
         for co in triple_word_score:
             self.board[co[0]][co[1]] = 'TWS'
         for co in double_word_score:
@@ -23,14 +26,18 @@ class Board:
         for co in double_letter_score:
             self.board[co[0]][co[1]] = 'DLS'
 
-    def get_board(self):
+    def get_board(self): #creates the top header of the board display with column numbers
         board_str = "   |  " + "  |  ".join(str(item) for item in range(10)) + "  | " + "  | ".join(str(item) for item in range(10, 15)) + " |"
+        
+        #add the top bordr of the board display
         board_str += ("\n   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ "
                       "_\n")
 
         formatted_rows = []
-        for i, row in enumerate(self.board):
+        for i, row in enumerate(self.board):# format each row of the board for display
             row_str = " | ".join(str(item) for item in row)
+
+            #add row number with proper spacing 
             if i < 10:
                 formatted_rows.append(f"{i}  | {row_str} |")
             else:
@@ -61,9 +68,6 @@ class Board:
         return False
 
 
-    # TODO: check the existing word in the board and ensure that if the new word intersects with an existing word,
-    #  the new word is valid and is  in the dictionary
-
 
 
     def check_intersection(self, word, direction, col, row):
@@ -77,3 +81,8 @@ class Board:
                 if self.board[row + i][col] != "   ":
                     return True
         return False
+
+
+
+    # TODO: check the existing word in the board and ensure that if the new word intersects with an existing word,
+    #  the new word is valid and is  in the dictionary

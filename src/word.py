@@ -32,7 +32,7 @@ class Word:
                 self.board[y + i][x] = f" {char} "
 
     def get_word(self):
-        return self.word
+        return self.word 
 
     def get_score(self):
         return self.score
