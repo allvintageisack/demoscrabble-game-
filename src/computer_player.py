@@ -14,15 +14,6 @@ class ComputerPlayer(Player):
 
         while not valid_word:
             word_to_play = random.choice(list(word_dictionary))
-            # word_length = len(word_to_play)
-
-            # if len(Word.played_words) == 0:
-            #     direction = random.choice(["right", "down"])
-            #     row, col = 7, 7
-            #
-            #     if (direction == "right" and col + word_length <= 15) or (direction == "down" and row + word_length <= 15):
-            #         valid_word = True
-            # else:
             for row in range(15):
                 for col in range(15):
                     if board.board[row][col] != "":

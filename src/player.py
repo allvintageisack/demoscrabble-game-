@@ -4,7 +4,7 @@ from collections import Counter
 
 class Player:
     VOWELS = ['A', 'E', 'I', 'O', 'U']
-    total_racks_drawn = 0  # Class-level attribute to track the number of racks drawn
+    total_racks_drawn = 0  # attribute to track the number of racks drawn
 
     def __init__(self, name, bag, word_dictionary):
         self.name = name
