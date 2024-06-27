@@ -17,6 +17,7 @@ with open('dict.txt', 'r') as file:
 WORD_DICTIONARY = set(words)
 
 def turn(player, board, bag):
+    print("MY TURN")
     global round_number
 
     if len(Word.played_words) == len(WORD_DICTIONARY):
@@ -39,11 +40,15 @@ def turn(player, board, bag):
                 print("Rack shuffled. New rack:")
                 print(player.display_rack())
                 continue
+            if word_to_play.strip() == "":
+                break
             if word_to_play in WORD_DICTIONARY and word_to_play not in Word.played_words:
                 if len(Word.played_words) == 0:
                     row, col = 7, 7
                     direction = input("Direction of word (right or down): ").lower()
                     valid_word = True
+
+                        
                 else:
                     row = int(input("Row number: "))
                     col = int(input("Column number: "))
@@ -91,6 +96,7 @@ def turn(player, board, bag):
 
 def start_game():
     global round_number, players
+    print("MY TURN")
     board = Board()
     bag = TileBag()
 
