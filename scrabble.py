@@ -17,7 +17,7 @@ with open('dict.txt', 'r') as file:
 WORD_DICTIONARY = set(words)
 
 def turn(player, board, bag):
-    print("MY TURN")
+
     global round_number
 
     if len(Word.played_words) == len(WORD_DICTIONARY):
