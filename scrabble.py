@@ -52,7 +52,6 @@ def turn(player, board, bag):
                         print("Invalid direction. Try again.")
                         continue
 
-                    # Ensure the word intersects with an existing word
                     if (board.is_cell_available(word_to_play, direction, col, row)
                             and board.check_intersection(word_to_play, direction, col, row)
                             and word_to_play in WORD_DICTIONARY):
@@ -64,13 +63,10 @@ def turn(player, board, bag):
             else:
                 print("Invalid word. Try again.")
 
-    # prompt to skip if no word has been played
     if word_to_play == "":
         print("Turn skipped.")
     else:
         if word.check_word():
-            # add a check to see if I used all the tiles in the rack,
-            # and if so award a bonus of 50 points
             if len(player.rack) == 0:
                 player.update_score(50)
                 print(f"\n{player.name} used all the tiles in the rack and was awarded a 50 point bonus.")
@@ -79,7 +75,6 @@ def turn(player, board, bag):
                 word.place_on_board()
                 player.remove_tiles(word_to_play)
                 player.refill_rack()
-                # Display the word played and its score
                 print(f"\n{player.name} played '{word.get_word()}' for {word.get_score()} points.")
         else:
             print("Invalid word placement.")
