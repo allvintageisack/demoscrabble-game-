@@ -1,5 +1,5 @@
 from src.board_and_management import Board
-from src.computer_player import Computer
+from src.computer_player import ComputerPlayer
 from src.player import Player
 from src.word import Word
 from src.tile_and_bag import TileBag
@@ -28,7 +28,7 @@ def turn(player, board, bag):
         board.display_board()
         print(player.display_rack())
 
-        if isinstance(player, Computer):
+        if isinstance(player, ComputerPlayer):
             word_to_play, location, direction = player.generate_move(board, WORD_DICTIONARY)
             word = Word(word_to_play, location, player, direction, board.board, WORD_DICTIONARY, LETTER_POINTS)
         else:
@@ -106,13 +106,13 @@ def start_game():
 
     num_of_players = 1
 
-    print("\nWelcome to Scrabble!")
+    print("\nWelcome to Scrabble! ")
     players = []
     for i in range(num_of_players):
         player_name = input("Please enter your name: ")
         players.append(Player(player_name, bag, WORD_DICTIONARY))
 
-    players.append(Computer("Computer", bag, WORD_DICTIONARY))
+    players.append(ComputerPlayer("Computer", bag, WORD_DICTIONARY))
 
     round_number = 1
     skipped_turns = 0

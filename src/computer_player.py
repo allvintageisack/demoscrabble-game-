@@ -3,98 +3,63 @@ import random
 from src.word import Word
 
 
+class ComputerPlayer(Player):
 
-
-class Computer(Player):
-
-    def generate_move(self,board,word_dictionary):
-
+    def generate_move(self, board, word_dictionary):
         word_to_play = ""
-        column = 0
+        col = 0
         row = 0
         direction = ""
         valid_word = False
 
         while not valid_word:
-            word_to_play= random.choice(list(word_dictionary))
-            #randomly selects a word from the word_dictionary 
-            length_of_chosen_word = len(word_to_play)
-            
-            if len(Word.played_words) == 0:
-                direction = random.choice(["right","down"])
-                row,column = 7, 7
+            word_to_play = random.choice(list(word_dictionary))
+            # word_length = len(word_to_play)
 
-                if (direction == "right" and column + length_of_chosen_word<= 15) or (direction == "down" and row + length_of_chosen_word <= 15):
-                    valid_word = True
-        else:
-            for row in range (15):
-                for column in range(15):
-                 if  board.board [row][column] != " " : 
-                        #checks if the place on the board is empty
-                    if self.can_place_word(board,"right",word_to_play, row,column,):   
-                         #checks if the word can be placed to the right from the current position
-
-                        direction = "right"
-
-                        valid_word = True
-
-                        break
-
-                    if self.can_place_word(board,"down", word_to_play, row,column,): 
-                        #checks if the word can be placed down from the current position
-                        direction = "down"
-
-                        valid_word = True
-
-                        break
-
+            # if len(Word.played_words) == 0:
+            #     direction = random.choice(["right", "down"])
+            #     row, col = 7, 7
+            #
+            #     if (direction == "right" and col + word_length <= 15) or (direction == "down" and row + word_length <= 15):
+            #         valid_word = True
+            # else:
+            for row in range(15):
+                for col in range(15):
+                    if board.board[row][col] != "":
+                        if self.can_place_word(board, word_to_play, row, col, "right"):
+                            direction = "right"
+                            valid_word = True
+                            break
+                        if self.can_place_word(board, word_to_play, row, col, "down"):
+                            direction = "down"
+                            valid_word = True
+                            break
                 if valid_word:
                     break
 
-
-            if word_to_play in Word.played_words: 
-                #checks if the word had been played do valid
+            if word_to_play in Word.played_words:
                 valid_word = False
 
-        return word_to_play,[row, column],direction
+        return word_to_play, [col, row], direction
 
-       
+    def can_place_word(self, board, word, row, col, direction):
+        word_length = len(word)
 
-    def can_place_word (self,board,direction,word,row,column):
-
-        length_of_chosen_word= len(word) 
-        #checkks the length of the chosen word
-
-        if direction == "right":                      
-
-            if column + length_of_chosen_word > 15:
-
+        if direction == "right":
+            if col + word_length > 15:
                 return False
-
-            for i in range (length_of_chosen_word): 
-                #checks cells avaialabilty
-
-                if not (board.board)[row][column + i] == " " or (board.board)[row][column + i] == f" {word[i]} " :
-
+            for j in range(word_length):
+                if not (board.board[row][col + j] == "   " or board.board[row][col + j] == f" {word[j]} "):
                     return False
-
-                if not any(board.board[row+1][column] != "" for i in range (length_of_chosen_word)):
-
-                    return False
-
+            if not any(board.board[row][col + j] != "   " for j in range(word_length)):
+                return False
         elif direction == "down":
-
-            if row + length_of_chosen_word > 15:
+            if row + word_length > 15:
+                return False
+            for j in range(word_length):
+                if not (board.board[row + j][col] == "   " or board.board[row + j][col] == f" {word[j]} "):
+                    return False
+            if not any(board.board[row + j][col] != "   " for j in range(word_length)):
                 return False
 
-            for i in range(length_of_chosen_word):  
-                # checks cells availability
-
-                if not (board.board)[row + i][column] == " " or (board.board)[row + i][column] == f" {word[i]} ":
-
-                 return False
-
-            if not any(board.board[row + i][column] != " " for i in range(length_of_chosen_word)):
-
-                return False
-        return True    
+        return True
