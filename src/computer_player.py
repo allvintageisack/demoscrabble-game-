@@ -13,7 +13,10 @@ class ComputerPlayer(Player):
         valid_word = False
 
         while not valid_word:
-            word_to_play = random.choice(list(word_dictionary))
+            word_to_play = self.find_valid_word(word_dictionary)
+            if not word_to_play:
+                print(f"{self.name} cannot find a valid word to play.")
+                return None, None,None
             for row in range(15):
                 for col in range(15):
                     if board.board[row][col] != "":
@@ -32,6 +35,30 @@ class ComputerPlayer(Player):
                 valid_word = False
 
         return word_to_play, [col, row], direction
+    
+    def word_from_rack(self,word,letters):
+        rack = letters.copy()
+        for i in word:
+                
+                if i in rack:
+                    rack.remove(i)
+                else:
+                    return False
+        return True    
+
+    def find_valid_word(self,word_dictionary):
+        letters_on_rack = [tile.letter for tile in self.rack]
+        random.shuffle (letters_on_rack)
+
+        for word in word_dictionary:
+            if self.word_from_rack(word,letters_on_rack):
+                return word
+            elif word.strip() == "":
+                break
+
+        return " "    
+            
+
 
     def can_place_word(self, board, word, row, col, direction):
         word_length = len(word)
