@@ -1,7 +1,7 @@
 from src.player import Player
 import random
 from src.word import Word
-
+from itertools import permutations
 
 class ComputerPlayer(Player):
 
@@ -14,9 +14,11 @@ class ComputerPlayer(Player):
 
         while not valid_word:
             word_to_play = self.find_valid_word(word_dictionary)
+
             if not word_to_play:
                 print(f"{self.name} cannot find a valid word to play.")
-                return None, None,None
+                return None, None, None
+
             for row in range(15):
                 for col in range(15):
                     if board.board[row][col] != "":
@@ -35,29 +37,34 @@ class ComputerPlayer(Player):
                 valid_word = False
 
         return word_to_play, [col, row], direction
-    
+
     def word_from_rack(self,word,letters):
         rack = letters.copy()
         for i in word:
-                
-                if i in rack:
-                    rack.remove(i)
-                else:
-                    return False
-        return True    
+            if i in rack:
+                rack.remove(i)
+            else:
+                return False
+        return True
 
     def find_valid_word(self,word_dictionary):
         letters_on_rack = [tile.letter for tile in self.rack]
-        random.shuffle (letters_on_rack)
+        random.shuffle(letters_on_rack)
 
-        for word in word_dictionary:
-            if self.word_from_rack(word,letters_on_rack):
-                return word
-            elif word.strip() == "":
-                break
+        # for word in word_dictionary:
+        #     if self.word_from_rack(word,letters_on_rack):
+        #         return word
+        #     elif word.strip() == "":
+        #         break
 
-        return " "    
-            
+        for i in range(1, len(letters_on_rack) + 1):
+            for perm in permutations(letters_on_rack, i):
+                perm_word = ''.join(perm)
+                if perm_word in word_dictionary:
+                    return perm_word
+                
+        return " "
+
 
 
     def can_place_word(self, board, word, row, col, direction):
