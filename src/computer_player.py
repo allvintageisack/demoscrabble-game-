@@ -1,7 +1,7 @@
 from src.player import Player
 import random
 from src.word import Word
-from itertools import permutations
+
 
 class ComputerPlayer(Player):
 
@@ -13,12 +13,16 @@ class ComputerPlayer(Player):
         valid_word = False
 
         while not valid_word:
-            word_to_play = self.find_valid_word(word_dictionary)
+            word_to_play = random.choice(list(word_dictionary))
+            # word_length = len(word_to_play)
 
-            if not word_to_play:
-                print(f"{self.name} cannot find a valid word to play.")
-                return None, None, None
-
+            # if len(Word.played_words) == 0:
+            #     direction = random.choice(["right", "down"])
+            #     row, col = 7, 7
+            #
+            #     if (direction == "right" and col + word_length <= 15) or (direction == "down" and row + word_length <= 15):
+            #         valid_word = True
+            # else:
             for row in range(15):
                 for col in range(15):
                     if board.board[row][col] != "":
@@ -37,35 +41,6 @@ class ComputerPlayer(Player):
                 valid_word = False
 
         return word_to_play, [col, row], direction
-
-    def word_from_rack(self,word,letters):
-        rack = letters.copy()
-        for i in word:
-            if i in rack:
-                rack.remove(i)
-            else:
-                return False
-        return True
-
-    def find_valid_word(self,word_dictionary):
-        letters_on_rack = [tile.letter for tile in self.rack]
-        random.shuffle(letters_on_rack)
-
-        # for word in word_dictionary:
-        #     if self.word_from_rack(word,letters_on_rack):
-        #         return word
-        #     elif word.strip() == "":
-        #         break
-
-        for i in range(1, len(letters_on_rack) + 1):
-            for perm in permutations(letters_on_rack, i):
-                perm_word = ''.join(perm)
-                if perm_word in word_dictionary:
-                    return perm_word
-                
-        return " "
-
-
 
     def can_place_word(self, board, word, row, col, direction):
         word_length = len(word)
