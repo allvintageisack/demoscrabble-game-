@@ -26,10 +26,12 @@ class Word:
         x, y = self.location
         if self.direction == "right":
             for i, char in enumerate(self.word):
-                self.board[y][x + i] = f" {char} "
+                if (x+i) < 15:
+                 self.board[y][x + i] = f" {char} "
         elif self.direction == "down":
             for i, char in enumerate(self.word):
-                self.board[y + i][x] = f" {char} "
+                if (y+i) < 15:
+                 self.board[y + i][x] = f" {char} "
 
     def get_word(self):
         return self.word 
